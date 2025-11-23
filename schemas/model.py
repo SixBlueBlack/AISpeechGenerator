@@ -13,13 +13,13 @@ class SpeechRequest(BaseModel):
 
 class SpeechResponse(BaseModel):
     speech: str
-    generation_time: float
 
 
 class ModelSettings(BaseModel):
     temperature: float = 0.7
     top_p: float = 0.9
     top_k: int = 50
-    max_length: int = 1024
+    max_length: int = 2048
+    max_new_tokens: int = 2048
     repetition_penalty: float = 1.1
     do_sample: bool = True
