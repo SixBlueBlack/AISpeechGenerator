@@ -7,7 +7,7 @@ from utils import load_styles, save_styles
 router = APIRouter()
 
 
-@router.post("/set_styles")
+@router.post("")
 async def set_styles(styles_list: List[SpeechStyle]):
     """Добавляет новые стили выступлений."""
     styles = load_styles()
@@ -21,11 +21,11 @@ async def set_styles(styles_list: List[SpeechStyle]):
     return {"message": "Стили добавлены", "styles": added_styles}
 
 
-@router.get("/get_styles")
+@router.get("")
 async def get_styles():
     raise HTTPException(status_code=501)
 
 
-@router.put("/update_styles")
+@router.put("")
 async def update_styles(style: SpeechStyle):
     raise HTTPException(status_code=501)

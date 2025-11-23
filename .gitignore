@@ -170,6 +170,8 @@ cython_debug/
 
 .idea/
 
+speech_styles.json
+
 # Abstra
 # Abstra is an AI-powered process automation framework.
 # Ignore directories containing user credentials, local state, and settings.
