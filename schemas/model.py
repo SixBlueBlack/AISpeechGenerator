@@ -23,8 +23,3 @@ class ModelSettings(BaseModel):
     max_length: int = 1024
     repetition_penalty: float = 1.1
     do_sample: bool = True
-
-
-class SpeechStyle(BaseModel):
-    name: str
-    description: str
