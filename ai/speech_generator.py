@@ -2,6 +2,7 @@ from typing import Dict, List
 from schemas.model import SpeechRequest
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
+import model_parameters
 
 
 class SpeechGenerator:
@@ -27,7 +28,7 @@ class SpeechGenerator:
 
             self.model = AutoModelForCausalLM.from_pretrained(
                 'microsoft/Phi-3-mini-4k-instruct',
-                torch_dtype=torch.float16,
+                dtype=torch.float16,
                 device_map="auto",
                 trust_remote_code=False,
                 attn_implementation="eager"
@@ -74,21 +75,21 @@ class SpeechGenerator:
                 return_tensors="pt",
                 padding=True,
                 truncation=True,
-                max_length=2048  # Учитываем ограничения контекста Phi-3 mini
+                max_length=model_parameters.max_length  # Учитываем ограничения контекста Phi-3 mini
             ).to(self.device)
 
             with torch.no_grad():
                 outputs = self.model.generate(
                     **inputs,
-                    max_new_tokens=2048,  # Максимальная длина ответа
-                    temperature=0.7,
-                    do_sample=True,
-                    top_p=0.9,
-                    top_k=50,
+                    max_new_tokens=model_parameters.max_new_tokens,  # Максимальная длина ответа
+                    temperature=model_parameters.temperature,
+                    do_sample=model_parameters.do_sample,
+                    top_p=model_parameters.top_p,
+                    top_k=model_parameters.top_k,
                     pad_token_id=self.tokenizer.eos_token_id,
-                    repetition_penalty=1.1,
+                    repetition_penalty=model_parameters.repetition_penalty,
                     eos_token_id=self.tokenizer.eos_token_id,
-                    early_stopping=True
+                    early_stopping=model_parameters.early_stopping
                 )
 
             generated_text = self.tokenizer.decode(
