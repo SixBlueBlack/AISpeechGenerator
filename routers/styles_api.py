@@ -22,10 +22,18 @@ async def set_styles(styles_list: List[SpeechStyle]):
 
 
 @router.get("")
-async def get_styles():
-    raise HTTPException(status_code=501)
+async def get_styles() -> List[SpeechStyle]:
+    """Возвращает список всех стилей."""
+    styles = load_styles()
+    return [SpeechStyle(name=name, description=desc) for name, desc in styles.items()]
 
 
 @router.put("")
 async def update_styles(style: SpeechStyle):
-    raise HTTPException(status_code=501)
+    """Обновляет существующий стиль выступления."""
+    styles = load_styles()
+    if style.name not in styles:
+        raise HTTPException(status_code=404, detail=f"Стиль с именем '{style.name}' не найден")
+    styles[style.name] = style.description
+    save_styles(styles)
+    return {"message": "Стиль обновлен", "style": style.dict()}
