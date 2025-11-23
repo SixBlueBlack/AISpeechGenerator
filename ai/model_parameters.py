@@ -5,4 +5,3 @@ temperature = 0.7
 top_p = 0.9
 top_k = 50
 repetition_penalty = 1.1
-early_stopping = True

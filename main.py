@@ -6,15 +6,17 @@ from dependencies import init_speech_generator
 from routers.model_api import router as model_router
 from routers.styles_api import router as style_router
 
-app = FastAPI(
-    title="Speech Generation API",
-    description="API для генерации речей для выступлений",
-)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_speech_generator()
     yield
+
+app = FastAPI(
+    title="Speech Generation API",
+    description="API для генерации речей для выступлений",
+    lifespan=lifespan
+)
 
 app.include_router(model_router, prefix="/api/model")
 app.include_router(style_router, prefix="/api/styles")

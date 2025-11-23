@@ -1,8 +1,8 @@
-from typing import Dict, List
+from typing import Dict
 from schemas.model import SpeechRequest
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
-import model_parameters
+import ai.model_parameters as model_parameters
 
 
 class SpeechGenerator:
@@ -70,6 +70,7 @@ class SpeechGenerator:
         prompt = self.generate_prompt(request, available_styles)
 
         try:
+            print('Начало конфигурации')
             inputs = self.tokenizer(
                 prompt,
                 return_tensors="pt",
@@ -77,6 +78,10 @@ class SpeechGenerator:
                 truncation=True,
                 max_length=model_parameters.max_length  # Учитываем ограничения контекста Phi-3 mini
             ).to(self.device)
+
+            print('Сконфигурировал tokenizer')
+            print(model_parameters.temperature)
+            print('1')
 
             with torch.no_grad():
                 outputs = self.model.generate(
@@ -88,14 +93,17 @@ class SpeechGenerator:
                     top_k=model_parameters.top_k,
                     pad_token_id=self.tokenizer.eos_token_id,
                     repetition_penalty=model_parameters.repetition_penalty,
-                    eos_token_id=self.tokenizer.eos_token_id,
-                    early_stopping=model_parameters.early_stopping
+                    eos_token_id=self.tokenizer.eos_token_id
                 )
+
+            print('Получил ответ от модели')
 
             generated_text = self.tokenizer.decode(
                 outputs[0],
                 skip_special_tokens=True
             )
+
+            print('Десериализация ответа')
 
             if "<|assistant|>\n" in generated_text:
                 response = generated_text.split("<|assistant|>\n")[-1]

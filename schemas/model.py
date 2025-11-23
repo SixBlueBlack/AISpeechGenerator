@@ -13,7 +13,6 @@ class SpeechRequest(BaseModel):
 
 class SpeechResponse(BaseModel):
     speech: str
-    generation_time: float
 
 
 class ModelSettings(BaseModel):
@@ -23,5 +22,4 @@ class ModelSettings(BaseModel):
     max_length: int = 2048
     max_new_tokens: int = 2048
     repetition_penalty: float = 1.1
-    do_sample: bool = True,
-    early_stopping = True
+    do_sample: bool = True
