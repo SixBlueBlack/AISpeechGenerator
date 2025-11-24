@@ -25,6 +25,7 @@ async def set_styles(styles_list: List[SpeechStyle]):
 async def get_styles() -> List[SpeechStyle]:
     """Возвращает список всех стилей."""
     styles = load_styles()
+    #упростить
     return [SpeechStyle(name=name, description=desc) for name, desc in styles.items()]
 
 
