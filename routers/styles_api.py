@@ -22,14 +22,9 @@ async def set_styles(styles_list: List[SpeechStyle]):
 
 
 @router.get("")
-async def get_styles() -> List[SpeechStyle]:
-    """Возвращает список всех стилей."""
-<<<<<<< Updated upstream
+async def get_styles():
     styles = load_styles()
-=======
-    styles = load_styles() or {}
->>>>>>> Stashed changes
-    return [SpeechStyle(name=name, description=desc) for name, desc in styles.items()]
+    return {"styles": styles}
 
 
 @router.put("")
