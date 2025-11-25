@@ -23,6 +23,7 @@ async def set_styles(styles_list: List[SpeechStyle]):
 
 @router.get("")
 async def get_styles():
+    """Получение стилей выступления."""
     styles = load_styles()
     return {"styles": styles}
 
