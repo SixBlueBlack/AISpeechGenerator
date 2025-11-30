@@ -1,9 +1,11 @@
+import pytest
+from unittest.mock import Mock, patch
 import sys
 import os
-import pytest
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from schemas.model import SpeechRequest
 from schemas.model import ModelSettings
 
 
@@ -16,6 +18,51 @@ from ai.model_parameters import (
     top_k,
     repetition_penalty
 )
+
+
+@pytest.fixture
+def sample_speech_request():
+    """Фикстура для тестового запроса"""
+    return SpeechRequest(
+        topic="Технологии будущего",
+        duration_minutes=5,
+        style="formal",
+        language="ru",
+        key_points=["Искусственный интеллект", "Робототехника", "Биотехнологии"],
+        custom_instructions="Сделать акцент на этические аспекты"
+    )
+
+
+@pytest.fixture
+def sample_available_styles():
+    """Фикстура для доступных стилей"""
+    return {
+        "formal": "Формальный стиль выступления",
+        "casual": "Неформальный стиль выступления",
+        "inspirational": "Вдохновляющий стиль"
+    }
+
+
+@pytest.fixture
+def mock_speech_generator():
+    """Фикстура для мокинга SpeechGenerator"""
+    mock_instance = Mock()
+    mock_instance.model_loaded = True
+    mock_instance.generate_speech.return_value = "Это сгенерированная тестовая речь."
+
+    with patch('dependencies._speech_generator', mock_instance):
+        yield mock_instance
+
+
+@pytest.fixture
+def mock_load_styles():
+    """Фикстура для мокинга функции load_styles"""
+    with patch('utils.load_styles') as mock_load:
+        mock_load.return_value = {
+            "formal": "Формальный стиль выступления",
+            "casual": "Неформальный стиль выступления"
+        }
+        yield mock_load
 
 
 @pytest.fixture
