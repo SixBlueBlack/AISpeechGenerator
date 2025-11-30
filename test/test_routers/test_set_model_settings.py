@@ -25,31 +25,31 @@ class TestModelParameters:
             assert getattr(model_parameters, attr) is not None
 
 
-def test_parameters_are_importable():
-    """Тест что все параметры можно импортировать напрямую"""
-    from ai.model_parameters import (
-        do_sample, max_length, max_new_tokens, temperature,
-        top_p, top_k, repetition_penalty
-    )
-    
-    assert do_sample is True
-    assert max_length == 2048
-    assert max_new_tokens == 2048
-    assert temperature == 0.7
-    assert top_p == 0.9
-    assert top_k == 50
-    assert repetition_penalty == 1.1
+    def test_parameters_are_importable(self):
+        """Тест что все параметры можно импортировать напрямую"""
+        from ai.model_parameters import (
+            do_sample, max_length, max_new_tokens, temperature,
+            top_p, top_k, repetition_penalty
+        )
+        
+        assert do_sample is True
+        assert max_length == 2048
+        assert max_new_tokens == 2048
+        assert temperature == 0.7
+        assert top_p == 0.9
+        assert top_k == 50
+        assert repetition_penalty == 1.1
 
 
-def test_module_direct_access(model_parameters_module):
-    """Тест прямого доступа к параметрам через модуль"""
-    assert model_parameters_module.do_sample is True
-    assert model_parameters_module.max_length == 2048
-    assert model_parameters_module.max_new_tokens == 2048
-    assert model_parameters_module.temperature == 0.7
-    assert model_parameters_module.top_p == 0.9
-    assert model_parameters_module.top_k == 50
-    assert model_parameters_module.repetition_penalty == 1.1
+    def test_module_direct_access(self, model_parameters_module):
+        """Тест прямого доступа к параметрам через модуль"""
+        assert model_parameters_module.do_sample is True
+        assert model_parameters_module.max_length == 2048
+        assert model_parameters_module.max_new_tokens == 2048
+        assert model_parameters_module.temperature == 0.7
+        assert model_parameters_module.top_p == 0.9
+        assert model_parameters_module.top_k == 50
+        assert model_parameters_module.repetition_penalty == 1.1
 
 
 class TestSetModelSettings:
@@ -96,7 +96,7 @@ class TestSetModelSettings:
         ai.model_parameters.repetition_penalty = original_settings["repetition_penalty"]
 
 
-def test_endpoint_exists():
-    """Тест что endpoint /api/model/set_model_settings существует"""
-    response = client.post("/api/model/set_model_settings", json={})
-    assert response.status_code != 404
+    def test_endpoint_exists(self):
+        """Тест что endpoint /api/model/set_model_settings существует"""
+        response = client.post("/api/model/set_model_settings", json={})
+        assert response.status_code != 404
