@@ -82,7 +82,6 @@ class SpeechGenerator:
             print('Сконфигурировал tokenizer')
 
             with torch.no_grad():
-                print(inputs)
                 outputs = self.model.generate(
                     **inputs,
                     max_new_tokens=model_parameters.max_new_tokens,  # Максимальная длина ответа
