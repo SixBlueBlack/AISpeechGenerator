@@ -145,8 +145,6 @@ class SpeechGenerator:
             ).to(self.device)
 
             print('Сконфигурировал tokenizer')
-            print(model_parameters.temperature)
-            print('1')
 
             with torch.no_grad():
                 outputs = self.model.generate(
