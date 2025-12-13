@@ -17,40 +17,7 @@ router = APIRouter()
 
 @router.post("")
 async def set_styles(styles_list: List[SpeechStyle]):
-    
-    """
-    Устанавливает или заменяет стили в системе.
-    
-    Эта функция полностью заменяет существующие стили на переданный список.
-    Все предыдущие стили будут удалены, и система будет использовать только
-    стили из предоставленного списка.
-    
-    Parameters:
-    -----------
-    styles_list : List[SpeechStyle]
-        Список объектов SpeechStyle, которые будут установлены как новые стили.
-        Каждый объект должен содержать:
-        - name: str - уникальное имя стиля (обязательно)
-        - description: str - описание стиля (опционально)
-        - parameters: dict - дополнительные параметры стиля (опционально)
-        
-    """
-
-    styles = load_styles()
-    added_styles = []
-    for style in styles_list:
-        if style.name in styles:
-            raise HTTPException(status_code=400, detail=f"Стиль с именем '{style.name}' уже существует")
-        styles[style.name] = style.description
-        added_styles.append(style.dict())
-    save_styles(styles)
-    return {"message": "Стили добавлены", "styles": added_styles}
-
-
-@router.get("")
-async def get_styles():
-    
-    """
+ """
     Добавляет новые стили выступлений в систему.
     
     Принимает список стилей и добавляет их в хранилище. Каждый стиль должен
@@ -64,17 +31,80 @@ async def get_styles():
             - description (str): Описание стиля
     
     Returns:
-        dict: Сообщение об успешном добавлении и список добавленных стилей.
+        dict: Сообщение об успешном добавлении и данные добавленных стилей.
             Пример:
             {
                 "message": "Стили добавлены",
                 "styles": [
-                    {"name": "научный", "description": "Строгий академический стиль..."}
+                    {"name": "научный", "description": "Научный стиль речи"},
+                    {"name": "художественный", "description": "Художественный стиль"}
                 ]
             }
     
     Raises:
         HTTPException 400: Если стиль с таким именем уже существует.
+    
+    Example:
+        Запрос:
+        POST /styles
+        [
+            {
+                "name": "научный",
+                "description": "Научный стиль речи"
+            },
+            {
+                "name": "художественный", 
+                "description": "Художественный стиль"
+            }
+        ]
+        
+        Ответ:
+        {
+            "message": "Стили добавлены",
+            "styles": [
+                {"name": "научный", "description": "Научный стиль речи"},
+                {"name": "художественный", "description": "Художественный стиль"}
+            ]
+        }
+    """
+    styles = load_styles()
+    added_styles = []
+    for style in styles_list:
+        if style.name in styles:
+            raise HTTPException(status_code=400, detail=f"Стиль с именем '{style.name}' уже существует")
+        styles[style.name] = style.description
+        added_styles.append(style.dict())
+    save_styles(styles)
+    return {"message": "Стили добавлены", "styles": added_styles}
+
+
+@router.get("")
+async def get_styles():
+
+    """
+    Получает все доступные стили выступлений из системы.
+    
+    Возвращает словарь со всеми стилями, где ключ - имя стиля,
+    значение - описание стиля.
+    
+    Returns:
+        dict: Словарь со всеми стилями в формате:
+            {
+                "имя_стиля_1": "описание_стиля_1",
+                "имя_стиля_2": "описание_стиля_2",
+                ...
+            }
+    
+    Example:
+        Запрос:
+        GET /styles
+        
+        Ответ:
+        {
+            "научный": "Научный стиль речи",
+            "художественный": "Художественный стиль",
+            "официальный": "Официально-деловой стиль"
+        }
     """
 
     styles = load_styles()
@@ -104,6 +134,23 @@ async def update_styles(style: SpeechStyle):
     
     Raises:
         HTTPException 404: Если стиль с указанным именем не найден.
+    
+    Example:
+        Запрос:
+        PUT /styles
+        {
+            "name": "научный",
+            "description": "Обновленное описание научного стиля"
+        }
+        
+        Ответ:
+        {
+            "message": "Стиль обновлен",
+            "style": {
+                "name": "научный",
+                "description": "Обновленное описание научного стиля"
+            }
+        }
     """
     styles = load_styles()
     if style.name not in styles:
