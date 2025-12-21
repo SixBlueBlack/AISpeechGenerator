@@ -58,6 +58,8 @@ def reset_styles():
 
 
 class TestStylesAPI:
+    """Тесты для api стилей"""
+
     def test_initial_get_returns_empty(self):
         """Проверяет, что изначально API возвращает пустой список стилей."""
         response = client.get("/api/styles")
