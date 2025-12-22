@@ -1,3 +1,8 @@
+"""
+Модуль для генерации текстов речей с использованием языковой модели Phi-3.
+Включает класс SpeechGenerator для работы с моделью и генерации речей на основе запросов.
+"""
+
 from typing import Dict
 from schemas.model import SpeechRequest
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -7,17 +12,49 @@ import ai.model_parameters as model_parameters
 
 class SpeechGenerator:
 
+    """
+    Класс для генерации речей с использованием модели Phi-3 mini.
+    
+    Этот класс обеспечивает загрузку модели, форматирование промптов и генерацию
+    текста речей на основе входных параметров.
+    
+    Attributes:
+        SYSTEM_PROMPT (str): Системный промпт, определяющий роль модели.
+        USER_PROMPT (str): Базовый пользовательский промпт для генерации речи.
+        model (AutoModelForCausalLM): Загруженная языковая модель.
+        tokenizer (AutoTokenizer): Токенизатор для обработки текста.
+        device (str): Устройство для вычислений ('cuda' или 'cpu').
+        model_loaded (bool): Флаг загрузки модели.
+    """
+ 
     SYSTEM_PROMPT = 'Ты - профессиональный спичрайтер и оратор. Твоя задача - написать качественную, структурированную речь на заданную тему. Речь должна быть естественной, убедительной и подходящей для устного выступления.'
     USER_PROMPT = 'Пожалуйста, напиши полноценную речь с вступлением, основной частью и заключением. Речь должна быть готова для непосредственного произнесения.'
 
     def __init__(self):
+        
+        """
+        Инициализирует генератор речей.
+        
+        Определяет устройство для вычислений и устанавливает флаг загрузки модели в False.
+        """
+
         self.model = None
         self.tokenizer = None
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model_loaded = False
 
     def load_model(self):
-        """Загрузка модели Phi-3 mini и токенизатора"""
+        
+        """
+        Загружает модель Phi-3 mini и токенизатор с Hugging Face.
+        
+        Загружает предобученную модель и токенизатор, настраивает pad_token
+        и определяет конфигурацию модели для генерации.
+        
+        Raises:
+            Exception: Если произошла ошибка при загрузке модели.
+        """
+         
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(
                 'microsoft/Phi-3-mini-4k-instruct',
@@ -40,7 +77,21 @@ class SpeechGenerator:
             raise
 
     def generate_prompt(self, request: SpeechRequest, available_styles: Dict[str, str]) -> str:
-        """Генерация промпта в формате чата для Phi-3"""
+        
+        """
+        Генерирует форматированный промпт для модели на основе запроса.
+        
+        Args:
+            request (SpeechRequest): Объект запроса с параметрами речи.
+            available_styles (Dict[str, str]): Словарь доступных стилей выступления.
+            
+        Returns:
+            str: Отформатированный промпт в виде строки.
+            
+        Raises:
+            ValueError: Если запрашиваемый стиль не найден в available_styles.
+        """
+
         if request.style not in available_styles:
             raise ValueError(f"Стиль '{request.style}' не найден. Доступные стили: {', '.join(available_styles.keys())}")
         style_description = available_styles[request.style]
@@ -62,7 +113,21 @@ class SpeechGenerator:
         return chat_format
 
     def generate_speech(self, request: SpeechRequest, available_styles: Dict[str, str]) -> str:
-        """Генерация речи на основе запроса"""
+        
+        """
+        Генерирует речь на основе запроса с использованием загруженной модели.
+        
+        Args:
+            request (SpeechRequest): Объект запроса с параметрами речи.
+            available_styles (Dict[str, str]): Словарь доступных стилей выступления.
+            
+        Returns:
+            str: Сгенерированный текст речи.
+            
+        Raises:
+            RuntimeError: Если модель не была загружена перед вызовом.
+            Exception: Если произошла ошибка при генерации текста.
+        """
 
         if not self.model_loaded:
             raise RuntimeError("Модель не загружена. Подождите.")
@@ -80,8 +145,6 @@ class SpeechGenerator:
             ).to(self.device)
 
             print('Сконфигурировал tokenizer')
-            print(model_parameters.temperature)
-            print('1')
 
             with torch.no_grad():
                 outputs = self.model.generate(
