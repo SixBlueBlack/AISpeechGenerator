@@ -25,14 +25,14 @@ router = APIRouter()
 async def generate_speech(
     request: SpeechRequest,
     speech_generator: Annotated[SpeechGenerator, Depends(get_speech_generator)]
-    ) -> SpeechResponse:
+) -> SpeechResponse:
 
     """
     Генерирует текст речи на основе переданных параметров запроса.
-    
+
     Этот эндпоинт принимает тему, стиль, длительность и другие параметры речи,
     и возвращает сгенерированный текст готовый для произнесения.
-    
+
     Args:
         request (SpeechRequest): Объект запроса с параметрами речи, включая:
             - topic: Тема речи
@@ -43,10 +43,10 @@ async def generate_speech(
             - custom_instructions: Дополнительные инструкции (опционально)
         speech_generator (SpeechGenerator): Инстанс генератора речей,
             внедряемый через dependency injection.
-    
+
     Returns:
         SpeechResponse: Объект ответа, содержащий сгенерированный текст речи.
-    
+
     Raises:
         HTTPException: Возможные ошибки:
             - 400: Некорректный запрос
@@ -59,13 +59,13 @@ async def generate_speech(
 
 
 @router.post("/set_model_settings")
-async def set_model_settings(settings: ModelSettings)-> None:
+async def set_model_settings(settings: ModelSettings) -> None:
     """
     Обновляет глобальные параметры языковой модели для генерации текста.
-    
+
     Позволяет динамически менять параметры генерации без перезагрузки приложения.
     Изменения применяются ко всем последующим запросам генерации.
-    
+
     Args:
         settings (ModelSettings): Объект с новыми значениями параметров:
             - do_sample (bool): Использовать ли стохастическую выборку
@@ -75,10 +75,10 @@ async def set_model_settings(settings: ModelSettings)-> None:
             - temperature (float): Температура для выборки (креативность)
             - top_k (int): Параметр top-k выборки
             - top_p (float): Параметр top-p (nucleus) выборки
-    
+
     Returns:
         None: Функция не возвращает значение, только обновляет глобальные параметры.
-    
+
     Raises:
         HTTPException:
             - 422: Ошибка валидации параметров

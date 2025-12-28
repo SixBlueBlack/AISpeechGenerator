@@ -19,11 +19,10 @@ class TestModelParameters:
             'do_sample', 'max_length', 'max_new_tokens', 'temperature',
             'top_p', 'top_k', 'repetition_penalty'
         ]
-        
+
         for attr in expected_attrs:
             assert hasattr(model_parameters, attr)
             assert getattr(model_parameters, attr) is not None
-
 
     def test_parameters_are_importable(self):
         """Тест что все параметры можно импортировать напрямую"""
@@ -31,7 +30,7 @@ class TestModelParameters:
             do_sample, max_length, max_new_tokens, temperature,
             top_p, top_k, repetition_penalty
         )
-        
+
         assert do_sample is True
         assert max_length == 2048
         assert max_new_tokens == 2048
@@ -39,7 +38,6 @@ class TestModelParameters:
         assert top_p == 0.9
         assert top_k == 50
         assert repetition_penalty == 1.1
-
 
     def test_module_direct_access(self, model_parameters_module):
         """Тест прямого доступа к параметрам через модуль"""
@@ -59,10 +57,10 @@ class TestSetModelSettings:
 
         new_model_parameters = sample_model_parameters.model_dump()
         response = client.post("/api/model/set_model_settings", json=new_model_parameters)
-        
+
         assert response.status_code == 200
         assert response.json() is None
-        
+
         assert ai.model_parameters.do_sample == new_model_parameters["do_sample"]
         assert ai.model_parameters.max_length == new_model_parameters["max_length"]
         assert ai.model_parameters.max_new_tokens == new_model_parameters["max_new_tokens"]
@@ -70,7 +68,6 @@ class TestSetModelSettings:
         assert ai.model_parameters.top_p == new_model_parameters["top_p"]
         assert ai.model_parameters.top_k == new_model_parameters["top_k"]
         assert ai.model_parameters.repetition_penalty == new_model_parameters["repetition_penalty"]
-
 
     @pytest.fixture(autouse=True)
     def reset_parameters(self):
@@ -84,9 +81,9 @@ class TestSetModelSettings:
             "top_k": 50,
             "repetition_penalty": 1.1
         }
-        
+
         yield
-        
+
         ai.model_parameters.do_sample = original_settings["do_sample"]
         ai.model_parameters.max_length = original_settings["max_length"]
         ai.model_parameters.max_new_tokens = original_settings["max_new_tokens"]
@@ -94,7 +91,6 @@ class TestSetModelSettings:
         ai.model_parameters.top_p = original_settings["top_p"]
         ai.model_parameters.top_k = original_settings["top_k"]
         ai.model_parameters.repetition_penalty = original_settings["repetition_penalty"]
-
 
     def test_endpoint_exists(self):
         """Тест что endpoint /api/model/set_model_settings существует"""

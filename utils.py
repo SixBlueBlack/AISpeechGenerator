@@ -14,7 +14,7 @@ STYLES_FILE = "speech_styles.json"
 
 
 def load_styles() -> Dict[str, str]:
-    
+
     """
     Загружает стили выступлений из JSON-файла.
 
@@ -41,7 +41,7 @@ def load_styles() -> Dict[str, str]:
 
 
 def save_styles(styles: Dict[str, str]):
-    
+
     """
     Сохраняет стили выступлений в JSON-файл.
 
@@ -60,6 +60,6 @@ def save_styles(styles: Dict[str, str]):
     Note:
         Файл будет перезаписан, если существует. Создается с отступами в 4 пробела.
     """
-    
+
     with open(STYLES_FILE, 'w') as f:
         json.dump(styles, f, indent=4)
