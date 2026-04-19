@@ -141,4 +141,21 @@ speech-generator/
    - pip (менеджер пакетов Python)  
    - CUDA-совместимая видеокарта (опционально, для ускорения)  
 
+## Запуск Docker-контейнера
+
+Сборка Docker-образа:
+```
+docker build -t ai-speech-generator .
+```
+
+Запуск контейнера:
+```
+docker run -d -p 8000:8000 --name ai-speech-generator-container ai-speech-generator
+```
+
+## Docker Hub 
+
+Cсылка: https://hub.docker.com/r/viktoriakhmeleva/ai-speech-generator
+
+
 
