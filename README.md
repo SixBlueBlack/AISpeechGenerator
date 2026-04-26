@@ -155,7 +155,7 @@ docker run -d -p 8000:8000 --name ai-speech-generator-container ai-speech-genera
 
 ## Docker Hub 
 
-Cсылка: https://hub.docker.com/r/viktoriakhmeleva/ai-speech-generator
+Cсылка: https://hub.docker.com/r/sibibib/ai-speech-generator
 
 
 
