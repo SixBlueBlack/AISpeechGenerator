@@ -5,7 +5,7 @@ name: Python application
 
 on:
   push:
-    branches: [ "main", "dockerCI" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -56,7 +56,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/test_fastApi
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/ai-speech-generator
           tags: |
             type=sha,prefix={{date 'YYYYMMDD'}}
             type=raw,value=latest
